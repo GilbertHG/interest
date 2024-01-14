@@ -3,6 +3,11 @@ import GoogleProvider from "next-auth/providers/google"
 import {connectToDB} from "@/serviceClients/mongodb";
 import User from "@/models/user";
 
+/**
+ * NextAuth handler for authentication and user session management.
+ *
+ * @constant {Function} handler - The NextAuth authentication handler.
+ */
 const handler = NextAuth({
 	providers: [
 		GoogleProvider({
@@ -12,11 +17,15 @@ const handler = NextAuth({
 	],
 	callbacks: {
 		async session({ session }) {
-			const sessionUser = await User.findOne({
-				email: session.user.email
-			});
+			try {
+				const sessionUser = await User.findOne({
+					email: session.user.email
+				});
+				session.user.id = sessionUser._id.toString();
+			} catch (e) {
+				console.error(e);
+			}
 			
-			session.user.id = sessionUser._id.toString();
 			return session;
 		},
 		async signIn({ profile }) {
@@ -29,7 +38,7 @@ const handler = NextAuth({
 					email: profile.email
 				});
 				
-				// if not, create a new user
+				// if not, create a upload user
 				if (!userExists) {
 					await User.create({
 						email: profile.email,

@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 
 let isConnected = false;
 
+/**
+ * Connects to the MongoDB database using the provided URI and initializes the connection.
+ *
+ * @async
+ * @function
+ * @throws {Error} Throws an error if there's an issue with connecting to MongoDB.
+ */
 export const connectToDB = async () => {
     mongoose.set('strictQuery', true);
 

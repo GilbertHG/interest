@@ -9,9 +9,9 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata = {
   title: 'Interest',
   description: 'Your image recommendation',
-  icon: '/assets/images/logo.svg',
-  favicon: '/assets/images/logo.svg',
-  'apple-icon': '/assets/images/logo.svg'
+  icon: '/assets/image/logo.svg',
+  favicon: '/assets/image/logo.svg',
+  'apple-icon': '/assets/image/logo.svg'
 }
 
 export default function RootLayout({ children }) {

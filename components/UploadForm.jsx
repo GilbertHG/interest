@@ -1,43 +1,79 @@
 'use client';
-import {Button, Select} from "flowbite-react";
+import {Button, Select, Toast} from "flowbite-react";
 import sourceType from "@/constants/sourceType";
 import UploadField from "@/components/UploadField";
 import {useForm} from "react-hook-form";
-import React, {useState} from "react";
-import {z} from "zod";
+import React, {useCallback, useState} from "react";
 import {zodResolver} from "@hookform/resolvers/zod";
-
-const schema = z.object({
-	sourceType: z.string()
-	.refine((value) => {
-		console.log(value)
-		return Object.values(sourceType).includes(value);
-	}, { message: "Invalid Type" })
-});
+import {uploadFormSchema} from "@/services/validations/uploadForm";
+import {useSession} from "next-auth/react";
+import {HiFire} from "react-icons/hi";
+import {Toaster, ToasterType} from "@/components/Toaster";
 
 export const UploadForm = () => {
+	const { data: session } = useSession();
 	const {
 		register,
 		handleSubmit,
 		formState: { errors }
 	} = useForm({
-		resolver: zodResolver(schema)
+		resolver: zodResolver(uploadFormSchema)
 	});
 	const [submitting, setSubmitting] = useState(false);
 	const [form, setForm] = useState({
 		sourceType: sourceType.s3,
 		images: {}
 	});
+	const [toaster, setToaster] = useState({
+		type: null,
+		message: null
+	});
 	
-	const handleUploadFormSubmit = async (e) => {
+	const handleUploadFormSubmit = useCallback(async (e) => {
 		e.preventDefault();
 		if (Object.keys(form.images).length <= 0) return;
+		
 		setSubmitting(true);
-		setSubmitting(false);
-	};
+		
+		const formData = new FormData();
+		Object.values(form.images).forEach(function (image, i) {
+			formData.append(`file-${i}`, image.file);
+		});
+		formData.append('sourceType', form.sourceType);
+		formData.append('userId',  session?.user?.id);
+		try {
+			const response = await fetch(`/api/image/upload`, {
+				method: "POST",
+				body: formData
+			});
+			setSubmitting(false);
+			
+			if (response.ok) {
+				setForm(prevForm => ({
+					...prevForm,
+					images: {}
+				}));
+				response.json().then(jsonData => {
+					setToaster({
+						type: ToasterType.INFO,
+						message: jsonData.message
+					});
+				});
+			} else {
+			
+			}
+		} catch (e) {
+			console.log(e);
+			setSubmitting(false);
+		}
+	}, [form, session]);
 	
 	return (
 		<>
+			<Toaster
+				toaster={toaster}
+				setToaster={setToaster}
+			/>
 			<form onSubmit={(e) => {
 				handleSubmit(handleUploadFormSubmit(e));
 			}}>
