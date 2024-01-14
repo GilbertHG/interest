@@ -7,6 +7,7 @@ import {getProviders, signIn, signOut, useSession} from "next-auth/react";
 import {useEffect, useState} from "react";
 import {usePathname} from "next/navigation";
 import user from "@/models/user";
+import {SearchContextProvider} from "@/context/SearchContext";
 
 const Nav = () => {
 	const { data: session } = useSession();
@@ -39,6 +40,7 @@ const Nav = () => {
 				            Interest
 				        </span>
 					</Navbar.Brand>
+					
 					<Search/>
 					
 					{session?.user &&

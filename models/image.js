@@ -1,5 +1,5 @@
 import {model, models, Schema} from "mongoose";
-import sourceType from "@/constants/sourceType";
+import sourceType from "@/constants/SourceType";
 
 /**
  * Mongoose schema for comments associated with an image.

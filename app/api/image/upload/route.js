@@ -53,7 +53,7 @@ export const POST = async (req) => {
 			response.message = uploadReport.message;
 		} else {
 			response.status = 400;
-			response.message = uploadReport.message;
+			response.error = uploadReport.message;
 		}
 		return new Response(response?.toJson(), {
 			status: response.status

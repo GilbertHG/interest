@@ -3,7 +3,7 @@ import uploadToS3 from "@/services/uploadToS3";
 import * as mime from "next/dist/server/serve-static";
 import UploadReport from "@/helpers/objects/uploadReport";
 import uploadToFileCoin from "@/services/uploadToFilecoin";
-import sourceType from "@/constants/sourceType";
+import sourceType from "@/constants/SourceType";
 import ImageReport from "@/helpers/objects/imageReport";
 
 /**

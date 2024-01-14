@@ -1,5 +1,5 @@
 import {z} from "zod";
-import sourceType from "@/constants/sourceType";
+import sourceType from "@/constants/SourceType";
 
 const MAX_FILE_SIZE=process.env.MAX_FILE_SIZE ? parseInt(process.env.NUMERIC_STRING, 52428800) : 52428800;
 

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google'
 import Provider from "@/components/Provider";
 import Nav from "@/components/Nav";
 import Head from "next/head";
+import {SearchContextProvider} from "@/context/SearchContext";
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -24,19 +25,21 @@ export default function RootLayout({ children }) {
     </head>
     
     <body>
-        <Provider>
-	        <div className={"app bg-white"}>
-		       <div className={"min-h-full"}>
-			       <header>
-				       <Nav />
-			       </header>
-			       <main className={"container mx-auto"}>
-				       {children}
-			       </main>
-		       </div>
-	        </div>
-        </Provider>
-      </body>
+	    <SearchContextProvider>
+		    <Provider>
+			    <div className={"app bg-white"}>
+				    <div className={"min-h-full"}>
+					    <header>
+						    <Nav />
+					    </header>
+					    <main className={"container mx-auto"}>
+						    {children}
+					    </main>
+				    </div>
+			    </div>
+		    </Provider>
+	    </SearchContextProvider>
+    </body>
     </html>
   )
 }

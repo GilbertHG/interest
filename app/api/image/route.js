@@ -1,5 +1,6 @@
 import {connectToDB} from "@/serviceClients/mongodb";
 import Image from "@/models/image";
+import ResponseHandler from "@/helpers/objects/response";
 
 /**
  * Handles the HTTP GET request for fetching all image from the database.
@@ -10,15 +11,47 @@ import Image from "@/models/image";
  * @returns {Response} A Response object containing a JSON representation of the fetched image.
  */
 export const GET = async (request) => {
-    try {
+	let response = new ResponseHandler();
+	const searchParams = request.nextUrl.searchParams
+	try {
         await connectToDB();
+		const searchParams = request.nextUrl.searchParams
+		const sourceType = searchParams?.get("sourceType");
+		const query = searchParams?.get("query");
+		const userId = searchParams?.get("userId");
+		const offset = searchParams?.get("offset");
+		console.log(sourceType)
+		console.log(query)
+		console.log(userId)
+		console.log(offset)
+		
+		let queryObject = {
+			type: sourceType,
+			fileName: query ? { $regex: new RegExp(query, 'i') } : { $exists: true },
+		};
 
-        const images = await Image.find({}).populate('creator');
-        return new Response(JSON.stringify(images), {
+		if (userId) {
+			queryObject.creator = userId;
+		}
+
+		const images = await Image.find(queryObject)
+			.skip(offset)
+			.populate('creator');
+
+		response.data = images.map(image => {
+			return image._doc;
+		});
+		response.status = 200;
+		response.message = "Success to fetch images";
+		console.log(response)
+        return new Response(response.toJson(), {
             status: 200
         });
     } catch (e) {
-        return new Response("Failed to fetch all image", {
+		console.error(e);
+		response.status = 500;
+		response.error = "Failed to fetch images";
+        return new Response("Failed to fetch images", {
             status: 500
         });
     }

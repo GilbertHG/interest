@@ -2,37 +2,53 @@
 
 import Image from "@/components/Image";
 import StorageSelector from "@/components/StorageSelector";
-import {useCallback, useEffect, useState} from "react";
-import SourceType from "@/constants/sourceType";
+import {useCallback, useEffect, useRef, useState} from "react";
+import SourceType from "@/constants/SourceType";
+import {useSearchContext} from "@/context/SearchContext";
 
+const fetchImages = async (sourceType, userId, query, offset) => {
+	try {
+		const queryParams = new URLSearchParams({
+			sourceType: sourceType,
+			userId: userId ? userId : '',
+			query: query ? query : '',
+			offset: offset,
+		});
+		
+		const response = await fetch(`/api/image/?${queryParams.toString()}`, {
+			method: "GET",
+		});
+		
+		return await response.json();
+	} catch (error) {
+		// Handle errors here
+		console.error(error);
+	}
+};
 
 const Gallery = ({ userId }) => {
-	const [storageType, setStorageType] = useState(SourceType.s3);
+	const { query, sourceType } = useSearchContext();
+	const [images, setImages] = useState([]);
+	const [offset, setOffset] = useState(0);
 	
-	useEffect((e) => {
-		console.log("Gallery Effect");
-	}, [storageType])
+	useEffect(() => {
+		const processFetchImages = async () => {
+			setOffset(0);
+			const jsonData = await fetchImages(sourceType, userId, query, offset);
+			setImages(jsonData.data);
+		}
+		
+		const data = processFetchImages(); // Call the async function
+	}, [sourceType, query]);
 	
 	return (
 		<>
-			<StorageSelector
-				storageType={storageType}
-				setStorageType={setStorageType} />
+			<StorageSelector />
 			
 			<div className="container column-1 sm:columns-4 gap-3 mx-auto space-y-3 mb-5">
-				<Image src={"https://source.unsplash.com/600x500?rainbow"} alt={"Image"} className={"mb-4 rounded-lg"} />
-				<img src="https://source.unsplash.com/600x500?computer" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/700x600?couple" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x700?color" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x350?onepiece" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x200?naruto" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x250?android" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x300?meme" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/900x600?donald" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x900?sora" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x900?aoi" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x900?sea" alt="Image" className="mb-4 rounded-lg"/>
-				<img src="https://source.unsplash.com/600x900?android" alt="Image" className="mb-4 rounded-lg"/>
+				{images.map((imageSource, index) => (
+					<Image key={index} src={imageSource.url} alt={imageSource.fileName} className={"mb-4 rounded-lg"} />
+				))}
 			</div>
 		</>
 	)

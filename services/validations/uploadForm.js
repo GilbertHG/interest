@@ -1,5 +1,5 @@
 import {z} from "zod";
-import sourceType from "@/constants/sourceType";
+import sourceType from "@/constants/SourceType";
 
 export const uploadFormSchema = z.object({
 	sourceType: z.string()

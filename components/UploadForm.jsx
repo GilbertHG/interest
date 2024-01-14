@@ -1,6 +1,6 @@
 'use client';
 import {Button, Select, Toast} from "flowbite-react";
-import sourceType from "@/constants/sourceType";
+import sourceType from "@/constants/SourceType";
 import UploadField from "@/components/UploadField";
 import {useForm} from "react-hook-form";
 import React, {useCallback, useState} from "react";
@@ -53,18 +53,29 @@ export const UploadForm = () => {
 					...prevForm,
 					images: {}
 				}));
-				response.json().then(jsonData => {
-					setToaster({
-						type: ToasterType.INFO,
-						message: jsonData.message
-					});
-				});
-			} else {
-			
 			}
+			response.json().then(jsonData => {
+				let respToasterType;
+				let message;
+				if (response.ok) {
+					respToasterType = ToasterType.SUCCESS;
+					message = jsonData.message;
+				} else {
+					respToasterType = ToasterType.ERROR;
+					message = jsonData.error;
+				}
+				setToaster({
+					type: respToasterType,
+					message: message
+				});
+			});
 		} catch (e) {
 			console.log(e);
 			setSubmitting(false);
+			setToaster({
+				type: ToasterType.INFO,
+				message: "Failed to upload images"
+			});
 		}
 	}, [form, session]);
 	
