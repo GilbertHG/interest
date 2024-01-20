@@ -13,7 +13,7 @@ import {s3} from "@/serviceClients/awsConfig";
  * @returns {Promise<{url: string | null, success: boolean}>} A promise that resolves with an object containing the S3 file location (URL) and a success indicator.
  * @throws {Error} Throws an error if there's an issue with uploading the file to S3.
  */
-const uploadToS3 = async (fileContent, fileName, fileType ) => {
+export const uploadToS3 = async (fileContent, fileName, fileType ) => {
     const params = {
         Bucket: process.env.AWS_S3_BUCKET,
         Key: `${process.env.AWS_S3_TO_ADD}/${fileName}`,
@@ -38,4 +38,17 @@ const uploadToS3 = async (fileContent, fileName, fileType ) => {
 	};
 };
 
-export default uploadToS3;
+export const deleteS3Object = async (objectKey) => {
+	const params = {
+		Bucket: process.env.AWS_S3_BUCKET,
+		Key: `${process.env.AWS_S3_TO_ADD}/${objectKey}`,
+	};
+	
+	s3.deleteObject(params, (err, data) => {
+		if (err) {
+			console.error('Error deleting object:', err);
+		} else {
+			console.log('Object deleted successfully:', data);
+		}
+	});
+};

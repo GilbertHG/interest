@@ -54,26 +54,21 @@ export const UploadForm = () => {
 					images: {}
 				}));
 			}
-			response.json().then(jsonData => {
-				let respToasterType;
-				let message;
-				if (response.ok) {
-					respToasterType = ToasterType.SUCCESS;
-					message = jsonData.message;
-				} else {
-					respToasterType = ToasterType.ERROR;
-					message = jsonData.error;
-				}
-				setToaster({
-					type: respToasterType,
-					message: message
-				});
+			
+			const jsonData = await response.json();
+			
+			const respToasterType = response.ok ? ToasterType.SUCCESS : ToasterType.ERROR;
+			const message = response.ok ? jsonData.message : jsonData.error;
+			
+			setToaster({
+				type: respToasterType,
+				message: message
 			});
 		} catch (e) {
 			console.log(e);
 			setSubmitting(false);
 			setToaster({
-				type: ToasterType.INFO,
+				type: ToasterType.ERROR,
 				message: "Failed to upload images"
 			});
 		}

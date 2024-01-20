@@ -13,7 +13,6 @@ import Image from "@/models/image";
  * @returns {void} This function does not return a value.
  */
 function saveImages(imagesReports, type, userId) {
-	console.log(imagesReports);
 	imagesReports?.map(imageReport => {
 		var newImage = new Image({
 			type: type,

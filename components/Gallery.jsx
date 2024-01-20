@@ -5,6 +5,7 @@ import StorageSelector from "@/components/StorageSelector";
 import {useCallback, useEffect, useRef, useState} from "react";
 import SourceType from "@/constants/SourceType";
 import {useSearchContext} from "@/context/SearchContext";
+import {Toaster} from "@/components/Toaster";
 
 const fetchImages = async (sourceType, userId, query, offset) => {
 	try {
@@ -30,6 +31,10 @@ const Gallery = ({ userId }) => {
 	const { query, sourceType } = useSearchContext();
 	const [images, setImages] = useState([]);
 	const [offset, setOffset] = useState(0);
+	const [toaster, setToaster] = useState({
+		type: null,
+		message: null
+	});
 	
 	useEffect(() => {
 		const processFetchImages = async () => {
@@ -45,9 +50,14 @@ const Gallery = ({ userId }) => {
 		<>
 			<StorageSelector />
 			
+			<Toaster
+				toaster={toaster}
+				setToaster={setToaster}
+			/>
+			
 			<div className="container column-1 sm:columns-4 gap-3 mx-auto space-y-3 mb-5">
 				{images.map((imageSource, index) => (
-					<Image key={index} src={imageSource.url} alt={imageSource.fileName} className={"mb-4 rounded-lg"} />
+					<Image key={index} setImages={setImages} userId={imageSource?.creator?._id} imageId={imageSource?._id} src={imageSource.url} alt={imageSource.fileName} className={"mb-4 rounded-lg"} setToaster={setToaster} />
 				))}
 			</div>
 		</>

@@ -12,7 +12,6 @@ import ResponseHandler from "@/helpers/objects/response";
  */
 export const GET = async (request) => {
 	let response = new ResponseHandler();
-	const searchParams = request.nextUrl.searchParams
 	try {
         await connectToDB();
 		const searchParams = request.nextUrl.searchParams
@@ -20,10 +19,6 @@ export const GET = async (request) => {
 		const query = searchParams?.get("query");
 		const userId = searchParams?.get("userId");
 		const offset = searchParams?.get("offset");
-		console.log(sourceType)
-		console.log(query)
-		console.log(userId)
-		console.log(offset)
 		
 		let queryObject = {
 			type: sourceType,
@@ -43,7 +38,6 @@ export const GET = async (request) => {
 		});
 		response.status = 200;
 		response.message = "Success to fetch images";
-		console.log(response)
         return new Response(response.toJson(), {
             status: 200
         });

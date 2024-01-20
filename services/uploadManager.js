@@ -1,10 +1,10 @@
 import { File } from '@/helpers/objects/shims'
-import uploadToS3 from "@/services/uploadToS3";
 import * as mime from "next/dist/server/serve-static";
 import UploadReport from "@/helpers/objects/uploadReport";
 import uploadToFileCoin from "@/services/uploadToFilecoin";
 import sourceType from "@/constants/SourceType";
 import ImageReport from "@/helpers/objects/imageReport";
+import {uploadToS3} from "@/services/uploadToS3";
 
 /**
  * Generates a Filecoin URL for a given Content Identifier (CID) and file name.
@@ -46,14 +46,15 @@ async function processS3Upload(fileFormDataEntryValues) {
 	for (const fileFormDataEntryValue of fileFormDataEntryValues) {
 		try {
 			const file = fileFormDataEntryValue;
-			console.log(file?.name)
 			const fileName = getFileName(file?.name, mime.getExtension(file?.type))
 
 			const buffer = Buffer.from(await file.arrayBuffer());
 			var resp = await uploadToS3(buffer, fileName, file?.type);
+			console.log("S3 Response")
+			console.log(resp)
 			if (resp?.success) {
 				report.totalSucceed++;
-				report.data?.push(new ImageReport(resp?.url, file?.name));
+				report.data?.push(new ImageReport(resp?.url, fileName));
 			} else {
 				report.totalFailed++;
 			}

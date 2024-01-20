@@ -18,27 +18,25 @@ const ToasterType = {
  *
  * @function
  * @param {string} type - The type of the toast.
- * @returns {Object} An object containing icon, background color, text color, and content for the toast.
+ * @returns {Object} An object containing icon, background color, and text color for the toast.
  */
 const getToastProps = (type) => {
 	const typeProps = {
 		INFO: {
-			icon: <HiCheck className="h-5 w-5" />,
+			icon: <HiInformationCircle className="h-5 w-5" />,
 			bgColor: "bg-green-100",
 			textColor: "text-green-500",
-			content: "Item moved successfully.",
 		},
 		ERROR: {
 			icon: <HiX className="h-5 w-5" />,
 			bgColor: "bg-red-100",
 			textColor: "text-red-500",
-			content: "Item has been deleted.",
+			message: "Something went wrong"
 		},
 		SUCCESS: {
-			icon: <HiInformationCircle className="h-5 w-5" />,
+			icon: <HiCheck className="h-5 w-5" />,
 			bgColor: "bg-orange-100",
 			textColor: "text-orange-500",
-			content: "Improve password difficulty.",
 		},
 	};
 	
@@ -66,11 +64,11 @@ const Toaster = ({ setToaster, toaster }) => {
 		return null;
 	}
 	
-	const { icon, bgColor, textColor, content } = getToastProps(toaster?.type);
+	const { icon, bgColor, textColor, message } = getToastProps(toaster?.type);
 	
 	return (
 		<div className={"my-2 grid justify-items-end"}>
-			{icon && bgColor && textColor && content && (
+			{icon && bgColor && textColor && (
 				<Toast>
 					<div
 						className={`inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${bgColor} ${textColor} dark:${bgColor.replace(
@@ -80,7 +78,7 @@ const Toaster = ({ setToaster, toaster }) => {
 					>
 						{icon}
 					</div>
-					<div className="ml-3 text-sm font-normal">{content}</div>
+					<div className="ml-3 text-sm font-normal">{toaster && toaster.message ? toaster.message : message}</div>
 					<Toast.Toggle />
 				</Toast>
 			)}
