@@ -1,5 +1,5 @@
 /**
- * Class for handling HTTP responses with message, error, status, and data properties.
+ * Class for handling HTTP responses with message, error, status, data, and hasMore properties.
  */
 class ResponseHandler {
 	/**
@@ -8,12 +8,14 @@ class ResponseHandler {
 	 * @param {string|null} error - The error message (if any).
 	 * @param {number} status - The HTTP status code.
 	 * @param {any} data - Additional data to include in the response.
+	 * @param {boolean} hasMore - Indicates whether there is more data available.
 	 */
-	constructor(message = '', error = '', status = 200, data = null) {
+	constructor(message = '', error = '', status = 200, data = null, hasMore = false) {
 		this.message = message;
 		this.error = error;
 		this.status = status;
 		this.data = data;
+		this.hasMore = hasMore;
 	}
 	
 	/**
@@ -21,10 +23,11 @@ class ResponseHandler {
 	 * @param {string} message - The response message.
 	 * @param {number} status - The HTTP status code.
 	 * @param {any} data - Additional data to include in the response.
+	 * @param {boolean} hasMore - Indicates whether there is more data available.
 	 * @returns {ResponseHandler} A ResponseHandler instance for a successful response.
 	 */
-	static success(message, status = 200, data = null) {
-		return new ResponseHandler(message, null, status, data);
+	static success(message, status = 200, data = null, hasMore = false) {
+		return new ResponseHandler(message, null, status, data, hasMore);
 	}
 	
 	/**
@@ -33,15 +36,16 @@ class ResponseHandler {
 	 * @param {string} error - The error message.
 	 * @param {number} status - The HTTP status code.
 	 * @param {any} data - Additional data to include in the response.
+	 * @param {boolean} hasMore - Indicates whether there is more data available.
 	 * @returns {ResponseHandler} A ResponseHandler instance for an error response.
 	 */
-	static error(message, error, status = 500, data = null) {
-		return new ResponseHandler(message, error, status, data);
+	static error(message, error, status = 500, data = null, hasMore = false) {
+		return new ResponseHandler(message, error, status, data, hasMore);
 	}
 	
 	/**
 	 * Converts the ResponseHandler instance to a simple object.
-	 * @returns {Object} The response object with message, error, status, and data properties.
+	 * @returns {Object} The response object with message, error, status, data, and hasMore properties.
 	 */
 	toObject() {
 		return {
@@ -49,6 +53,7 @@ class ResponseHandler {
 			error: this.error,
 			status: this.status,
 			data: this.data,
+			hasMore: this.hasMore,
 		};
 	}
 	

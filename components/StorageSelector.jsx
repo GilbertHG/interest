@@ -4,10 +4,23 @@ import SourceType from "@/constants/SourceType";
 import {useCallback} from "react";
 import {useSearchContext} from "@/context/SearchContext";
 
+/**
+ * StorageSelector component for selecting storage types.
+ *
+ * @component
+ * @returns {JSX.Element} The StorageSelector component.
+ */
 const StorageSelector = () => {
 	const { sourceType, updateSourceType } = useSearchContext();
-	const handleStorageType = useCallback((sourceType) => {
-		updateSourceType(sourceType);
+	
+	/**
+	 * Handle the selection of a storage type.
+	 *
+	 * @param {string} selectedType - The selected storage type.
+	 * @returns {void}
+	 */
+	const handleStorageType = useCallback((selectedType) => {
+		updateSourceType(selectedType);
 	}, []);
 	
 	return (
@@ -19,7 +32,7 @@ const StorageSelector = () => {
 				</Button.Group>
 			</div>
 		</>
-	)
+	);
 }
 
 export default StorageSelector;

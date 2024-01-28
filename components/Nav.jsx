@@ -9,25 +9,54 @@ import {usePathname} from "next/navigation";
 import user from "@/models/user";
 import {SearchContextProvider} from "@/context/SearchContext";
 
+/**
+ * Nav component for rendering the navigation bar with logo, search, and user authentication links.
+ * @component
+ * @returns {JSX.Element} The Nav component.
+ */
 const Nav = () => {
+	/**
+	 * React hook to access the authentication session.
+	 * @type {Object}
+	 * @property {Object} data - The session data containing user information.
+	 */
 	const { data: session } = useSession();
+	
+	/**
+	 * State hook for storing authentication providers.
+	 * @type {[Object|null, Function]}
+	 */
 	const [providers, setProviders] = useState(null);
+	
+	/**
+	 * Custom hook to get the current pathname from Next.js navigation.
+	 * @type {string}
+	 */
 	const pathname = usePathname();
 	
+	/**
+	 * Effect hook to fetch authentication providers when the component mounts.
+	 * @function
+	 * @returns {void}
+	 */
 	useEffect(() => {
 		const setUpProviders = async () => {
 			const response = await getProviders();
 			
 			setProviders(response);
-		}
+		};
 		
 		setUpProviders();
 	}, []);
 	
-	return(
+	/**
+	 * Render the Nav component.
+	 */
+	return (
 		<>
 			<div className={"container mx-auto"}>
 				<Navbar fluid rounded>
+					{/* Logo and brand */}
 					<Navbar.Brand href="/">
 						<Image
 							src="/assets/images/logo.svg"
@@ -37,13 +66,15 @@ const Nav = () => {
 							alt="Interest Logo"
 						/>
 						<span className="logo_text">
-				            Interest
-				        </span>
+              Interest
+            </span>
 					</Navbar.Brand>
 					
-					<Search/>
+					{/* Search component */}
+					<Search />
 					
-					{session?.user &&
+					{/* User profile and authentication links */}
+					{session?.user && (
 						<div className="flex md:order-2">
 							<Dropdown
 								arrowIcon={false}
@@ -64,15 +95,21 @@ const Nav = () => {
 								<Dropdown.Item href={"/my-image/" + session?.user.id}>My Image</Dropdown.Item>
 							</Dropdown>
 						</div>
-					}
+					)}
+					
+					{/* Navbar toggle button */}
 					<Navbar.Toggle />
+					
+					{/* Navbar links */}
 					<Navbar.Collapse>
 						<Navbar.Link href="/" {...(pathname === "/" ? { active: true } : {})}>
 							Home
 						</Navbar.Link>
 						{session?.user ? (
 							<>
-								<Navbar.Link href="/upload" {...(pathname === "/upload" ? { active: true } : {})}>Upload</Navbar.Link>
+								<Navbar.Link href="/upload" {...(pathname === "/upload" ? { active: true } : {})}>
+									Upload
+								</Navbar.Link>
 								<li key={"logout"}>
 									<button
 										onClick={() => signOut()}
@@ -80,7 +117,8 @@ const Nav = () => {
 										Logout
 									</button>
 								</li>
-							</>) : (
+							</>
+						) : (
 							<>
 								{providers &&
 									Object.values(providers).map((provider) => (
@@ -93,7 +131,7 @@ const Nav = () => {
 												Login
 											</button>
 										</li>
-								))}
+									))}
 							</>
 						)}
 					</Navbar.Collapse>

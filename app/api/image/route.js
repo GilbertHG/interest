@@ -32,10 +32,12 @@ export const GET = async (request) => {
 		const images = await Image.find(queryObject)
 			.skip(offset)
 			.populate('creator');
+		const countImages = await Image.countDocuments(queryObject);
 
 		response.data = images.map(image => {
 			return image._doc;
 		});
+		response.hasMore = countImages > images;
 		response.status = 200;
 		response.message = "Success to fetch images";
         return new Response(response.toJson(), {

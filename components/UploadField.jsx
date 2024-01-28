@@ -5,17 +5,36 @@ import {z, ZodError} from "zod";
 import {imageSchema} from "@/services/validations/image";
 import Dropzone from "react-dropzone";
 
+/**
+ * Component for handling file uploads and displaying images.
+ *
+ * @component
+ * @param {Object} props - The properties of the component.
+ * @param {Object} props.form - The form state.
+ * @param {function} props.setForm - Function to update the form state.
+ * @returns {JSX.Element} JSX element representing the file upload component.
+ */
 const UploadField = ({form, setForm}) => {
 	
-	
+	/**
+	 * State to manage file error messages.
+	 * @type {[string, function]}
+	 */
 	const [fileError, setFileError] = useState(null);
 	
+	/**
+	 * Handles the input of an image file.
+	 *
+	 * @function
+	 * @param {File} file - The image file to be processed.
+	 * @returns {Promise<void>} Promise that resolves after processing the file.
+	 */
 	const handleInputImage = async function (file) {
 		setFileError(null);
 		let hasError = false;
 		const error = await imageSchema.parseAsync(file).catch(function (e) {
 			hasError = true;
-			let errorMsg = 'Something has wrong!'
+			let errorMsg = 'Something went wrong!'
 			if (e instanceof ZodError) {
 				errorMsg = e.flatten()?.formErrors[0];
 			} else if (e instanceof Error) {
@@ -41,9 +60,16 @@ const UploadField = ({form, setForm}) => {
 		}));
 	}
 	
+	/**
+	 * Deletes an image from the form state.
+	 *
+	 * @function
+	 * @param {Event} e - The click event triggering the image deletion.
+	 * @param {string} id - The ID of the image to be deleted.
+	 */
 	var deleteImage = function (e, id) {
 		e.preventDefault();
-
+		
 		setForm((prevForm) => {
 			// Create an upload object without the object to be removed
 			const updatedImages = { ...prevForm.images };

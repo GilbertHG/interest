@@ -10,6 +10,12 @@ import {useSession} from "next-auth/react";
 import {HiFire} from "react-icons/hi";
 import {Toaster, ToasterType} from "@/components/Toaster";
 
+/**
+ * Component for handling image uploads with a form.
+ *
+ * @component
+ * @returns {JSX.Element} JSX element representing the image upload form.
+ */
 export const UploadForm = () => {
 	const { data: session } = useSession();
 	const {
@@ -29,6 +35,12 @@ export const UploadForm = () => {
 		message: null
 	});
 	
+	/**
+	 * Handles the form submission to upload images.
+	 *
+	 * @function
+	 * @param {Event} e - The form submission event.
+	 */
 	const handleUploadFormSubmit = useCallback(async (e) => {
 		e.preventDefault();
 		if (Object.keys(form.images).length <= 0) return;

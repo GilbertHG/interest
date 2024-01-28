@@ -1,6 +1,5 @@
 import { HiCheck, HiInformationCircle, HiX } from "react-icons/hi";
 import { Toast } from "flowbite-react";
-import {getProviders} from "next-auth/react";
 import {useEffect, useState} from "react";
 
 /**
@@ -48,7 +47,8 @@ const getToastProps = (type) => {
  *
  * @component
  * @param {Object} props - The properties of the component.
- * @param {string} toaster - The instance of the toast.
+ * @param {string} props.toaster - The instance of the toast.
+ * @param {function} props.setToaster - Function to set the toast.
  * @returns {JSX.Element} JSX element representing the toast.
  */
 const Toaster = ({ setToaster, toaster }) => {

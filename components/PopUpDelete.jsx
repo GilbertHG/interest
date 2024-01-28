@@ -3,14 +3,35 @@ import {HiOutlineExclamationCircle} from "react-icons/hi";
 import {useEffect, useState} from "react";
 import Image from "@/components/Image";
 
+/**
+ * PopUpDelete component for rendering a confirmation modal for deletion.
+ *
+ * @component
+ * @param {Object} props - Component properties.
+ * @param {boolean} props.openModal - Flag indicating whether the modal is open.
+ * @param {Function} props.setOpenModal - Function to toggle the modal open/close state.
+ * @param {boolean} props.show - Flag indicating whether the modal should be shown.
+ * @param {Function} props.handleDelete - Function to handle the deletion action.
+ * @returns {JSX.Element} The PopUpDelete component.
+ */
 const PopUpDelete = ({ openModal, setOpenModal, show, handleDelete }) => {
+	/**
+	 * Effect hook to synchronize the openModal state with the show prop.
+	 *
+	 * @function
+	 * @returns {void}
+	 */
 	useEffect(() => {
 		setOpenModal(show);
 	}, [show]);
 	
+	/**
+	 * Render the PopUpDelete component.
+	 *
+	 * @returns {JSX.Element}
+	 */
 	return (
 		<>
-			{/*<Button onClick={() => setOpenModal(true)}>Toggle modal</Button>*/}
 			<Modal show={openModal} size="md" onClose={() => setOpenModal(false)} popup>
 				<Modal.Header />
 				<Modal.Body>
@@ -31,7 +52,7 @@ const PopUpDelete = ({ openModal, setOpenModal, show, handleDelete }) => {
 				</Modal.Body>
 			</Modal>
 		</>
-	)
-}
+	);
+};
 
 export default PopUpDelete;
