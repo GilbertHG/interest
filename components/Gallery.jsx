@@ -150,6 +150,8 @@ const Gallery = ({ userId }) => {
 	 */
 	useEffect(() => {
 		processFetchImages(true);
+		setHighlightedImageIndex(null);
+		setHighlightedImage(null);
 	}, [sourceType, userId, query]);
 	
 	/**
